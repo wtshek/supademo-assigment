@@ -1,4 +1,4 @@
-export const VIDEOS_DATA_PATH = "src/data/videos.json";
+export const VIDEOS_DATA_PATH = "data/videos.json";
 
 export const YT_IFRAME_API_SRC = "https://www.youtube.com/iframe_api";
 

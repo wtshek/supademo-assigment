@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+The techstack
+
+- NextJS
+- Typescript
+- TailwindCSS
+- Package Manager: Yarn

@@ -4,14 +4,9 @@ import { promises as fs } from "fs";
 import path from "path";
 import { YouTubeSearchListResponse, YouTubeVideo } from "@/types/types";
 
-// Centralized default values
 const DEFAULT_START = 0;
 const DEFAULT_LIMIT = 10;
 
-// Helper to get absolute path
-const getDataFilePath = () => path.join(process.cwd(), VIDEOS_DATA_PATH);
-
-// Helper to check if a video contains the search string in title or description (case-insensitive)
 const containsSearch = (video: YouTubeVideo, search: string): boolean => {
   const { title, description } = video.snippet;
   return (
@@ -30,7 +25,7 @@ export async function GET(req: NextRequest) {
     const startIdx = Number.isNaN(start) ? DEFAULT_START : start;
     const limitNum = Number.isNaN(limit) ? DEFAULT_LIMIT : limit;
 
-    const filePath = getDataFilePath();
+    const filePath = path.join(process.cwd(), VIDEOS_DATA_PATH);
     const fileContent = await fs.readFile(filePath, "utf-8");
     const { items } = JSON.parse(fileContent) as YouTubeSearchListResponse;
     let result: YouTubeVideo[] = items;

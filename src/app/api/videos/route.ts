@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { VIDEOS_DATA_PATH } from "@/utils/const";
-import { promises as fs } from "fs";
-import path from "path";
+import videos from "@/data/videos.json";
 import { YouTubeSearchListResponse, YouTubeVideo } from "@/types/types";
 
 const DEFAULT_START = 0;
@@ -25,9 +23,7 @@ export async function GET(req: NextRequest) {
     const startIdx = Number.isNaN(start) ? DEFAULT_START : start;
     const limitNum = Number.isNaN(limit) ? DEFAULT_LIMIT : limit;
 
-    const filePath = path.join(process.cwd(), VIDEOS_DATA_PATH);
-    const fileContent = await fs.readFile(filePath, "utf-8");
-    const { items } = JSON.parse(fileContent) as YouTubeSearchListResponse;
+    const { items } = videos as YouTubeSearchListResponse;
     let result: YouTubeVideo[] = items;
 
     if (search) {

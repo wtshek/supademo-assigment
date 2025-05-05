@@ -43,12 +43,32 @@ const TrimBar: React.FC<TrimBarProps> = ({
     [containerWidth, duration]
   );
 
-  const handleDrag = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const getPointerX = (
+    e:
+      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.TouchEvent<HTMLDivElement>
+  ): number => {
+    if ("touches" in e && e.touches.length > 0) {
+      return e.touches[0].clientX;
+    }
+    if ("clientX" in e) {
+      return e.clientX;
+    }
+    return 0;
+  };
+
+  const handleDrag = (
+    e:
+      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.TouchEvent<HTMLDivElement>
+  ) => {
     if (!dragging) return;
+    // Prevent scrolling on touch
+    if ("touches" in e) e.preventDefault();
     const rect = (
       e.target as HTMLDivElement
     ).parentElement!.getBoundingClientRect();
-    let x = e.clientX - rect.left;
+    let x = getPointerX(e) - rect.left;
     x = Math.max(0, Math.min(containerWidth, x));
     const time = Math.round(getTime(x) / TRIM_STEP) * TRIM_STEP;
     if (dragging === "start") {
@@ -60,7 +80,12 @@ const TrimBar: React.FC<TrimBarProps> = ({
     }
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (
+    e?:
+      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.TouchEvent<HTMLDivElement>
+  ) => {
+    if (e && "touches" in e) e.preventDefault();
     if (!videoId) return;
     onTrimChange(trimStart, trimEnd);
     setDragging(null);
@@ -74,6 +99,9 @@ const TrimBar: React.FC<TrimBarProps> = ({
         onMouseMove={handleDrag}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragEnd}
+        onTouchMove={handleDrag}
+        onTouchEnd={handleDragEnd}
+        onTouchCancel={handleDragEnd}
       >
         <div
           className="absolute top-1/2 left-0 rounded-lg bg-zinc-200 -translate-y-1/2 w-full"
@@ -106,6 +134,10 @@ const TrimBar: React.FC<TrimBarProps> = ({
             top: `calc(50% - ${TRIM_HANDLE_HEIGHT / 2}px)`,
           }}
           onMouseDown={() => setDragging("start")}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            setDragging("start");
+          }}
         />
         {/* End handle */}
         <div
@@ -124,6 +156,10 @@ const TrimBar: React.FC<TrimBarProps> = ({
             top: `calc(50% - ${TRIM_HANDLE_HEIGHT / 2}px)`,
           }}
           onMouseDown={() => setDragging("end")}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            setDragging("end");
+          }}
         />
       </div>
       <div className="flex w-full justify-between mt-2">

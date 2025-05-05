@@ -181,7 +181,7 @@ const Player: React.FC<PlayerProps> = ({ video }) => {
   }, [state.playing, state.trimEnd]);
 
   return (
-    <div className="w-full flex flex-col pr-4" ref={containerRef}>
+    <div className="w-full flex flex-col" ref={containerRef}>
       <div>
         <div
           className="mb-4 w-full"

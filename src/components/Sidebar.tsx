@@ -51,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       ref={asideRef}
-      className={`w-full pr-4 max-h-screen overflow-y-scroll pretty-scrollbar ${className}`}
+      className={`w-full max-h-screen overflow-y-scroll pretty-scrollbar ${className}`}
     >
       <ul className="flex flex-col gap-4">
         {videos.map((video, idx) => {

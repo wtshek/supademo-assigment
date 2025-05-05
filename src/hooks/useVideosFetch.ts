@@ -28,29 +28,28 @@ export function useVideosFetch<T = unknown>(
   const [page, setPage] = useState<number>(0);
   const [search, setSearch] = useState<string>("");
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        start: String(page * pageSize),
-        limit: String(pageSize),
-        q: search,
-      });
-      const res = await fetch(`${apiUrl}?${params.toString()}`);
-      if (!res.ok) throw new Error("Failed to fetch");
-      const result: T[] = await res.json();
-      setData((prev) => (page === 0 ? result : [...prev, ...result]));
-      setHasMore(result.length === pageSize);
-    } catch {
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [apiUrl, page, pageSize, search]);
-
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams({
+          start: String(page * pageSize),
+          limit: String(pageSize),
+          q: search,
+        });
+        const res = await fetch(`${apiUrl}?${params.toString()}`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const result: T[] = await res.json();
+        setData((prev) => (page === 0 ? result : [...prev, ...result]));
+        setHasMore(result.length === pageSize);
+      } catch {
+        setHasMore(false);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
-  }, [fetchData]);
+  }, [apiUrl, page, pageSize, search]);
 
   const loadMore = useCallback(() => {
     if (!loading && hasMore) {

@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         }
       },
       {
-        root: asideRef.current,
+        root: null,
         rootMargin: "0px",
         threshold: 0.1,
       }
@@ -48,10 +48,14 @@ const Sidebar: React.FC<SidebarProps> = ({
     return () => observer.current?.disconnect();
   }, [videos, hasMore, loading, onLoadMore]);
 
+  const handleVideoSelect = (video: YouTubeVideo) => {
+    onVideoSelect(video);
+  };
+
   return (
     <aside
       ref={asideRef}
-      className={`w-full max-h-screen overflow-y-scroll pretty-scrollbar ${className}`}
+      className={`w-full lg:max-h-screen lg:overflow-y-scroll pretty-scrollbar ${className}`}
     >
       <ul className="flex flex-col gap-4">
         {videos.map((video, idx) => {
@@ -64,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               className={`w-full rounded-lg shadow p-4 hover:bg-indigo-50 hover:text-gray-900 transition-colors cursor-pointer flex gap-2 items-center ${
                 isSelected ? "bg-indigo-100 text-indigo-700" : ""
               }`}
-              onClick={() => onVideoSelect(video)}
+              onClick={() => handleVideoSelect(video)}
             >
               <div>
                 <div

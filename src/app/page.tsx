@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex items-center gap-4">
+      <div className="flex lg:items-center flex-col lg:flex-row gap-4">
         <Image src="/supademo_logo.svg" alt="logo" width={148} height={32} />
         <Searchbar className="w-full lg:w-2/3 mx-auto" onSearch={onSearch} />
       </div>
